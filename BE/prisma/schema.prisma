@@ -1,0 +1,92 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      Role     @default(ADMIN)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Lead {
+  id                String   @id @default(uuid())
+  name              String
+  email             String
+  company           String
+  phone             String?
+  projectType       String
+  projectTitle      String
+  description       String
+  timeline          String
+  budget            String
+  goals             String
+  targetAudience    String?
+  specialRequirements String?
+  referralSource    String?
+  status            LeadStatus @default(NEW)
+  aiScore           Float    @default(0)
+  aiAnalysis        String?  // Store the full AI analysis
+  aiInsights        AIInsights?
+  files             File[]
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model File {
+  id        String   @id @default(uuid())
+  filename  String
+  path      String
+  leadId    String
+  lead      Lead     @relation(fields: [leadId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model AIInsights {
+  id                String   @id @default(uuid())
+  leadId            String   @unique
+  lead              Lead     @relation(fields: [leadId], references: [id])
+  budget            String   // "good" or "needs_attention"
+  budgetReason      String
+  timeline          String   // "good" or "needs_attention"
+  timelineReason    String
+  scope             String   // "good" or "needs_attention"
+  scopeReason       String
+  requirements      String   // "good" or "needs_attention"
+  requirementsReason String
+  marketFit         String   // "high", "medium", or "low"
+  marketFitReason   String
+  technicalFeasibility String // "high", "medium", or "low"
+  technicalFeasibilityReason String
+  recommendation    String
+  nextSteps         String[]
+  riskFactors       String[]
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  DISQUALIFIED
+}
