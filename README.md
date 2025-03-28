@@ -1,152 +1,136 @@
-# Lead Generator
+# 🚀 AI-Powered Lead Generator & Management System
 
-A full-stack application for generating and managing leads with AI-powered analysis and insights.
+A full-stack application designed for businesses to efficiently capture, analyze, and manage leads with AI-driven insights.
 
-## Overview
+---
 
-Lead Generator is a modern web application that helps businesses capture, analyze, and manage leads through an intelligent form system. The application features:
+## 📌 Features
+- **Multi-step lead capture form** 📝
+- **AI-powered lead analysis & scoring** 🤖
+- **Admin dashboard for lead management** 📊
+- **Email integration for lead follow-up** ✉️
+- **PDF export functionality** 📄
+- **Modern, responsive UI with dark mode support** 🌙
 
-- Multi-step lead capture form
-- AI-powered lead analysis and scoring
-- Admin dashboard for lead management
-- Email integration for lead follow-up
-- PDF export functionality
-- Modern, responsive UI with dark mode support
+---
 
-## System Architecture
+## 🏗 System Architecture
 
-### Frontend (FE)
-- Built with React + TypeScript
-- Uses Vite as the build tool
-- Implements a modern component-based architecture
-- Features a responsive design with mobile support
-- Uses Tailwind CSS for styling
-- Implements shadcn/ui components for consistent UI
+### 🎨 Frontend (FE)
+✅ **Tech Stack:** React + TypeScript
+✅ **Build Tool:** Vite ⚡
+✅ **Styling:** Tailwind CSS + shadcn/ui
+✅ **Features:** Component-based architecture, mobile-responsive design
 
-### Backend (BE)
-- Node.js with Express
-- TypeScript for type safety
-- Prisma as the ORM
-- PostgreSQL database
-- OpenAI integration for AI analysis
-- Email service integration
+### 🛠 Backend (BE)
+✅ **Tech Stack:** Node.js + Express + TypeScript
+✅ **Database:** PostgreSQL (via Prisma ORM)
+✅ **AI Integration:** OpenAI API 🤯
+✅ **Email Services:** SMTP integration
 
-## Prerequisites
+---
 
-- Node.js (v18 or higher)
-- PostgreSQL
-- OpenAI API key
-- SMTP server credentials (for email functionality)
+## 🔧 Prerequisites
+- Node.js (v18 or higher) 🌍
+- PostgreSQL 🗄
+- OpenAI API key 🔑
+- SMTP server credentials 📧
 
-## Setup Instructions
+---
 
-### Backend Setup
+## ⚙️ Setup Instructions
 
-1. Navigate to the backend directory:
-   ```bash
-   cd BE
-   ```
+### 🖥 Backend Setup
+```sh
+cd BE
+npm install
+```
 
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
+Create a `.env` file and add:
+```env
+DATABASE_URL="postgresql://user:password@localhost:5432/leadgenerator"
+JWT_SECRET="your-secret-key"
+OPENAI_API_KEY="your-openai-api-key"
+SMTP_HOST="your-smtp-host"
+SMTP_PORT=587
+SMTP_USER="your-smtp-user"
+SMTP_PASS="your-smtp-password"
+```
 
-3. Create a `.env` file with the following variables:
-   ```
-   DATABASE_URL="postgresql://user:password@localhost:5432/leadgenerator"
-   JWT_SECRET="your-secret-key"
-   OPENAI_API_KEY="your-openai-api-key"
-   SMTP_HOST="your-smtp-host"
-   SMTP_PORT=587
-   SMTP_USER="your-smtp-user"
-   SMTP_PASS="your-smtp-password"
-   ```
+Run database migrations:
+```sh
+npx prisma migrate dev
+```
 
-4. Run database migrations:
-   ```bash
-   npx prisma migrate dev
-   ```
+Start the backend server:
+```sh
+npm run dev
+```
 
-5. Start the backend server:
-   ```bash
-   npm run dev
-   ```
+### 🎨 Frontend Setup
+```sh
+cd FE
+npm install
+```
 
-### Frontend Setup
+Create a `.env` file:
+```env
+VITE_API_URL="http://localhost:3000"
+```
 
-1. Navigate to the frontend directory:
-   ```bash
-   cd FE
-   ```
+Start the development server:
+```sh
+npm run dev
+```
 
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
+---
 
-3. Create a `.env` file with the following variables:
-   ```
-   VITE_API_URL="http://localhost:3000"
-   ```
+## 📡 API Documentation
 
-4. Start the development server:
-   ```bash
-   npm run dev
-   ```
+### 🔑 Authentication
+#### `POST /auth/login`
+- **Description:** Login for admin access
+- **Body:** `{ email: string, password: string }`
+- **Returns:** JWT Token
 
-## API Documentation
+### 📋 Leads
+#### `POST /leads`
+- **Description:** Create a new lead
+- **Body:** Lead form data
+- **Returns:** Created lead object
 
-### Authentication
+#### `GET /leads`
+- **Description:** Fetch all leads (Admin Only)
+- **Query Params:** `page`, `limit`, `search`, `status`
+- **Returns:** Paginated leads with total count
 
-#### POST /auth/login
-- Login endpoint for admin access
-- Body: `{ email: string, password: string }`
-- Returns: JWT token
+#### `GET /leads/:id`
+- **Description:** Get lead details by ID (Admin Only)
+- **Returns:** Lead object with AI insights
 
-### Leads
+#### `PUT /leads/:id`
+- **Description:** Update lead status (Admin Only)
+- **Body:** `{ status: string }`
+- **Returns:** Updated lead object
 
-#### POST /leads
-- Create a new lead
-- Body: Lead form data
-- Returns: Created lead object
+#### `DELETE /leads/:id`
+- **Description:** Delete a lead (Admin Only)
+- **Returns:** Success message
 
-#### GET /leads
-- Get all leads (admin only)
-- Query parameters:
-  - `page`: Page number (default: 1)
-  - `limit`: Items per page (default: 10)
-  - `search`: Search term
-  - `status`: Filter by status
-- Returns: Paginated leads with total count
+### ✉️ Email
+#### `POST /email/send`
+- **Description:** Send email using a template
+- **Body:** `{ to: string, templateId: string, variables: object }`
+- **Returns:** Success message
 
-#### GET /leads/:id
-- Get lead details by ID (admin only)
-- Returns: Lead object with AI insights
+#### `POST /email/send-custom/:leadId`
+- **Description:** Send a custom email to a lead (Admin Only)
+- **Body:** `{ subject: string, content: string }`
+- **Returns:** Success message
 
-#### PUT /leads/:id
-- Update lead status (admin only)
-- Body: `{ status: string }`
-- Returns: Updated lead object
+---
 
-#### DELETE /leads/:id
-- Delete a lead (admin only)
-- Returns: Success message
-
-### Email
-
-#### POST /email/send
-- Send email using template
-- Body: `{ to: string, templateId: string, variables: object }`
-- Returns: Success message
-
-#### POST /email/send-custom/:leadId
-- Send custom email to lead (admin only)
-- Body: `{ subject: string, content: string }`
-- Returns: Success message
-
-## Project Structure
-
+## 📂 Project Structure
 ```
 ├── BE/                 # Backend directory
 │   ├── src/
@@ -165,14 +149,16 @@ Lead Generator is a modern web application that helps businesses capture, analyz
     └── public/        # Static assets
 ```
 
-## Contributing
+---
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+## 🤝 Contributing
+1. **Fork the repository** 🍴
+2. **Create a feature branch:** `git checkout -b feature/amazing-feature` 🚀
+3. **Commit changes:** `git commit -m 'Add amazing feature'` ✅
+4. **Push to branch:** `git push origin feature/amazing-feature` 📤
+5. **Open a Pull Request** 🔥
 
-## License
+---
 
-This project is licensed under the MIT License - see the LICENSE file for details. 
+## 📜 License
+This project is licensed under the **MIT License** 📄 – see the `LICENSE` file for details.
